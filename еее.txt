@@ -1,0 +1,414 @@
+В консоль 
+ssh твой ник@127.0.0.1
+логин и пароль 
+cd ник-m1
+unzip laravel_11.zip
+настройки с БД в файле env (уже в папке)
+DB_CONNECTION=127.0.0.1
+DB_PORT=3306
+DB_DATABASE= ник_m1
+DB_USERNAME = ник
+DB_PASSWORD = пароль
+(проект должен запускаться)
+В консоль 
+php artisan make:model Application -mcr
+php artisan make:model Department -mcr
+php artisan make:model Category -mcr
+
+Изменить порядок выполнения миграций
+ 
+Create_application – должна быть в самом конце
+
+Миграция departments
+Schema::create(‘departments’, function(Blueprint $table){
+$table->id();
+$table->string(‘department_name’);
+});
+Миграция users
+Schema::create(‘users, function(Blueprint $table){
+$table->id();
+$table->string(‘name’);
+$table->string(‘last_name’);
+$table->string(‘first_name’);
+$table->string(‘patronym’)->nullable();
+$table->string(‘phone);
+$table->foreignId(‘department_id)->constrained();
+$table->string(‘email’)->unique();
+$table->timestamp(‘email_verified_at’)-> nullable();
+$table->string(‘password’);
+$table->rememberToken();
+$table->timestamps();
+});
+Миграция statuses
+Schema::create(‘statuses’, function(Blueprint $table){
+$table->id();
+$table->string(‘status_name’);
+});
+Миграция categories
+Schema::create(‘categories’, function(Blueprint $table){
+$table->id();
+$table->string(‘category_name’);
+});
+Миграция applications
+Schema::create(‘applications’, function(Blueprint $table){
+$table->id();
+$table->string(‘description’);
+$table->foreignId(‘category_id)->constrained()->onDelete(‘cascade’);
+$table->foreignId(‘user_id)->constrained()->onDelete(‘cascade’);
+$table->foreignId(‘status_id)->constrained()->onDelete(‘cascade’)->default(1);
+$table->timestamps();
+$table->index(‘created_at’);
+});
+Заполнить через интерфейс phpMyAdmin (вкладка «Вставить») таблицы «statuses», «departments»
+В консоль 
+php artisan migrate
+В консоль:
+php artisan make:model Status
+
+ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО
+МОДЕЛИ:
+Модель User
+
+protected $fillable = [
+‘name’,
+’email’,
+’password’,
+’department_id’,
+’phone’,
+’last_name’,
+’first_name’,
+’patronym’
+];
+public function departments(){
+return $this->hasMany(Dertment::class);
+}
+public function applications(){
+return $this->hasMany(Application::class);
+}
+
+
+
+Модель Status
+
+protected $fillable = [‘status_name’];
+public function applications(){
+return $this->hasMany(Application::class);
+}
+
+Модель Department
+
+protected $fillable = [‘department _name’];
+public function user(){
+return $this->belongsTo(User::class);
+}
+
+Модель Category
+protected $fillable = [‘category_name’];
+public function applications(){
+return $this->hasMany(Application::class);
+}
+
+Модель Application
+protected $fillable = [‘description’, ’category_id’, ’status_id’];
+public function user(){
+return $this->belongsTo(User::class);
+}
+public function category(){
+return $this->belongsTo(Category::class);
+}
+public function status(){
+return $this->belongsTo(Status::class);
+}
+
+СОЗДАЕШЬ БАЗОВЫЙ ШАБЛОН base.blade.php В ПАПКЕ resources/views/layouts
+
+в title :
+<title>@yield(‘title’)</title>
+B body
+<div class=”container”>
+<h1>Сервис Help</h1>
+@auth
+<nav>
+<ul> 
+<li><a href=”{{ route(‘application.index’) }}”>Мои заявки<a/></li>
+<li><a href=”{{ route(‘auth.logout’) }}”>Выход<a/></li>
+</ul>
+</nav>
+@endauth
+@yield(‘main’)
+</div>
+В консоль:
+php artisan make:controller RegisterController
+
+B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+Route::get(’/register’, [RegisterController::class, ‘registerform’])->name(‘auth.register’);
+Route::post(’/register’, [RegisterController::class, ‘register’])->name(‘auth.register’);
+
+СОЗДАЕШЬ ШАБЛОН register.blade.php В ПАПКЕ resources/views/auth
+
+@extends(‘layouts.base’)
+@section(‘title’, ’Регистрация’)
+@section(‘main’)
+<form method=”post” action=’{{ route(“auth.register”) }}’
+@csrf
+<div class=”line”>
+<label>Ваши ФИО</label>
+<input id=”last_name” name=”last_name” type=”text” placeholder=”Фамилия”>
+<input id=”first_name” name=”first_name” type=”text” placeholder=”Имя”>
+<input id=”patronym” name=”patronym” type=”text” placeholder=”Отчество”>
+</div>
+
+<div class=”line”>
+<label for=”name”>Ваш логин </label>
+<input id=”name” name=”name” type=”text”>
+</div>
+
+<div class=”line”>
+<label for=”email”>Ваша почта</label>
+<input id=”email” name=”email” type=”email”>
+</div>
+
+<div class=”line”>
+<label for=”phone”>Ваш номер</label>
+<input id=”phone” name=”phone” type=”text”>
+</div>
+
+<div class=”line”>
+<label for=”departmentText”>Отдел в котором вы работаете</label>
+<select name=”department_id” id=”departmentText”>
+@foreach ($departments as $department)
+<option value=”{{ $department->id }}”>{{ $department->department_name }}</option>
+@endforeach
+</select>
+</div>
+
+<div class=”line”>
+<label for=”password”>Ваш пароль</label>
+<input id=”password” name=”password” type=”password”>
+</div>
+
+<div class=”line”>
+<label for=”password_confirmation”>Ваш пароль</label>
+<input id=”password_confirmation” name=”password_confirmation” type=”password”>
+</div>
+
+<div class=”line”>
+<button type=”submit”>Регистрация</button>
+</div>
+</form>
+<p>Есть учетная запись? <a href=”{{ route(‘auth.login’) }}”>Авторизуйтесь</a></p>
+@endsection(‘main’)
+
+B RegisterController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+
+public function registerform(){
+$departments = [‘departments’ => Department::all()];
+return view(‘auth.register’, $departments);
+}
+
+public function register(Request $request){
+$user = User::create([
+‘name’=> $request->name,
+‘last_name’ => $request->last_name,
+‘first_name’ => $request->first_name,
+‘patronym’ => $request-> patronym,
+‘phone’ => $request->phone,
+‘email’ => $request->email,
+‘department_id’ => $request->department_id,
+‘password’ => Hash::make($request-> password)
+]);
+event(new Registered($user));
+Auth::login($user);
+Return redirect()->route(‘application.index’);
+}
+
+В консоль:
+php artisan make:controller LoginController
+
+B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+Route::get(’/login’, [LoginController::class, ‘loginform’])->name(‘auth.login’);
+Route::post(’/login’, [LoginController::class, ‘login’])->name(‘auth.login’);
+Route::get(’/logout’, [LoginController::class, ‘logout’])->name(‘auth.logout’);
+
+СОЗДАЕШЬ ШАБЛОН login.blade.php В ПАПКЕ resources/views/auth
+@extends(‘layouts.base’)
+@section(‘title’, ’Авторизация’)
+@section(‘main’)
+<form method=”post” action=’{{ route(“auth.login”) }}’
+@csrf
+
+<div class=”line”>
+<label for=”email”>Ваша почта</label>
+<input id=”email” name=”email” type=”email”>
+</div>
+
+<div class=”line”>
+<label for=”password”>Ваш пароль</label>
+<input id=”password” name=”password” type=”password”>
+</div>
+
+<div class=”line”>
+<button type=”submit”>Войти</button>
+</div>
+</form>
+<p>Нет учетной записи? <a href=”{{ route(‘auth.register’) }}”>Зарегистрируйтесь</a></p>
+@endsection(‘main’)
+
+B LoginController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+
+public function loginform(){
+return view(‘auth.login’);
+}
+
+public function login(Request $request){
+$success = auth()->attempt([
+‘email’ => $request->email,
+‘password’ => $request->password
+], request()->has(‘remember’));
+
+If($success) {
+return redirect()->route(‘application.index’); }
+}
+
+public function logout(){
+auth()->logout();
+return redirect()->route(‘auth.login’); 
+}
+
+B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+Route::get(’/application’, [ApplicationController::class, ‘index’])->name(‘application.index’);
+Route::get(’/application/create’, [ApplicationController::class, ‘create’])->name(‘application.create’);
+Route::post(’/application/create’, [ApplicationController::class, ‘store’])->name(‘application.store’);
+
+B ApplicationController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+
+public function index(){
+$context = [‘applications’ => Auth::user()->applications()->latest()->get() ];
+return view(‘application.index’, $context);
+}
+public function create(){
+$categories= [‘categories’ => Category::all() ];
+return view(‘application.create_application’, $categories);
+}
+
+public function store(Request $request){
+Auth::user()->applications()->create([
+‘description’ => request(‘description’),
+‘category_id’ => $request->category,
+‘status_id’ => 1
+]);
+return redirect()->route(‘application.index’);
+}
+
+СОЗДАЕШЬ ШАБЛОН index.blade.php В ПАПКЕ resources/views/application
+
+@extends(‘layouts.base’)
+@section(‘title’, ’Все заявки’)
+@section(‘main’)
+<h2>Мои заявки</h2>
+<a href=”{{ route(‘application.create’) }}”Создать заявку</a>
+@if (count($applications)>0)
+<article>
+@foreach ($applications as $application)
+<p>{{  $application->description }}</p>
+<p>{{  $application->created_at }}</p>
+@endforeach
+</article>
+@else
+<p>У вас нет заявок</p>
+@endif
+@endsection(‘main’)
+
+СОЗДАЕШЬ ШАБЛОН create_application.blade.php В ПАПКЕ resources/views/application
+
+@extends(‘layouts.base’)
+@section(‘title’, ’Все заявки’)
+@section(‘main’)
+<h2>Добавление заявки</h2>
+<a href=”{{ route(‘application.create’) }}”Создать заявку</a>
+<form method=”post” action=’{{ route(“application.store”) }}’
+@csrf
+<div class=”line”>
+<label for=”descriptionText”>Описание проблемы</label>
+<textarea name=” descriptionText” id=” descriptionText” rows=”5”><textarea>
+</div>
+
+<div class=”line”>
+<label for=”categoryText”>Категория проблемы</label>
+<select name=”category” id=”categoryText”>
+@foreach ($categories as $category)
+<option value=”{{ $category->id }}”>{{ $category-> category_name }}</option>
+@endforeach
+</select>
+</div>
+
+
+<div class=”line”>
+<button type=”submit”>Отправить</button>
+</div>
+</form>
+
+@endsection(‘main’)
+
+В консоль:
+php artisan make:controller AdminController
+
+B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+Route::get(’/admin’, [AdminController::class, ‘index’])->name(‘admin.index’);
+Route::patch(’/logout’, [AdminController::class, ‘update’])->name(‘status.update’);
+
+B AdminController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)
+
+public function index(){
+$context = [
+‘applications’ => Application::latest()->get(),
+‘statuses’ => Status::all()
+ ];
+return view(‘admin.index’, $context);
+}
+
+public function update(Request $request, Application $application)
+{
+$application = Application::where(‘id’, $request->application_id)->update([
+‘status_id’ => $request->status
+]);
+return redirect()->route(‘admin.index’);
+}
+
+СОЗДАЕШЬ ШАБЛОН index.blade.php В ПАПКЕ resources/views/admin
+
+@extends(‘layouts.base’)
+@section(‘title’, ’Панель администратора’)
+@section(‘main’)
+<h2>все заявки</h2>
+<div class=”applications”>
+@if (count($applications)>0)
+<article>
+@foreach ($applications as $application)
+<h3>Заявка № {{ $application->id }}</h3>
+<p>{{ $application->user->first_name }}{{ $application->user->last_name }}{{ $application->user->patronym }}</p>
+<p>{{ $application->user->department_id }}</p>
+<p>{{ $application->category->category_name }}</p>
+<p>{{ $application->description }}</p>
+
+<div class=”status-{{ $application->status->id }}”>{{ $application->status->status_name }}</div>
+<form action=”{{ route(‘status.update’) }}” method=”post”>
+@csrf
+@method(‘PATCH’)
+<input type=”hidden” name=”application_id” value=”{{ $application->id }}”>
+<select name=”status” id=”statusText”>
+@foreach ($statuses as $status)
+<option value=”{{ $status->id }}”>{{ $status->status_name }}</option>
+@endforeach
+</select>
+<button type=”submit”>Обновить</button>
+</form>
+<span>{{ $application->created_at }}</span>
+<p><a href=”{{ route(‘status.update’) }}”>Изменить статус</a></p>
+@endforeach
+</article>
+@else
+<p>В настоящее время заявок нет</p>
+@endif
+</div>
+@endsection(‘main’)
