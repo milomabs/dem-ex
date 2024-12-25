@@ -1,0 +1,835 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>be1.ru</title>
+</head>
+<body>
+<p><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">В консоль </span></span></strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ssh твой ник@127.0.0.1</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">логин и пароль </span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">cd ник-m1</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">unzip laravel_11.zip</span></span></p>
+
+<p><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">настройки с БД в файле env (уже в папке)</span></span></strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">DB_CONNECTION=127.0.0.1</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">DB_PORT=3306</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">DB_DATABASE= ник_m1</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">DB_USERNAME = ник</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">DB_PASSWORD = пароль</span></span></p>
+
+<p>(проект должен запускаться)</p>
+
+<p><strong>В консоль </strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:model Application -mcr</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:model Department -mcr</span></span></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:model Category -mcr</span></span></p>
+
+<p>&nbsp;</p>
+
+<p><strong>Изменить порядок выполнения миграций</strong></p>
+
+<p><span style="font-family:&quot;Times New Roman&quot;,serif"><img src="file:///C:/Users/User/AppData/Local/Temp/msohtmlclip1/01/clip_image002.png" style="height:136px; width:277px" /></span></p>
+
+<p><strong>Create_</strong><strong>application &ndash; должна быть в самом конце</strong></p>
+
+<p>&nbsp;</p>
+
+<p><strong>Миграция</strong><strong> departments</strong></p>
+
+<p>Schema::create(&lsquo;departments&rsquo;, function(Blueprint $table){</p>
+
+<p>$table-&gt;id();</p>
+
+<p>$table-&gt;string(&lsquo;department_name&rsquo;);</p>
+
+<p>});</p>
+
+<p><strong>Миграция</strong><strong> users</strong></p>
+
+<p>Schema::create(&lsquo;users, function(Blueprint $table){</p>
+
+<p>$table-&gt;id();</p>
+
+<p>$table-&gt;string(&lsquo;name&rsquo;);</p>
+
+<p>$table-&gt;string(&lsquo;last_name&rsquo;);</p>
+
+<p>$table-&gt;string(&lsquo;first_name&rsquo;);</p>
+
+<p>$table-&gt;string(&lsquo;patronym&rsquo;)-&gt;nullable();</p>
+
+<p>$table-&gt;string(&lsquo;phone);</p>
+
+<p>$table-&gt;foreignId(&lsquo;department_id)-&gt;constrained();</p>
+
+<p>$table-&gt;string(&lsquo;email&rsquo;)-&gt;unique();</p>
+
+<p>$table-&gt;timestamp(&lsquo;email_verified_at&rsquo;)-&gt; nullable();</p>
+
+<p>$table-&gt;string(&lsquo;password&rsquo;);</p>
+
+<p>$table-&gt;rememberToken();</p>
+
+<p>$table-&gt;timestamps();</p>
+
+<p>});</p>
+
+<p><strong>Миграция statuses</strong></p>
+
+<p>Schema::create(&lsquo;statuses&rsquo;, function(Blueprint $table){</p>
+
+<p>$table-&gt;id();</p>
+
+<p>$table-&gt;string(&lsquo;status_name&rsquo;);</p>
+
+<p>});</p>
+
+<p><strong>Миграция categories</strong></p>
+
+<p>Schema::create(&lsquo;categories&rsquo;, function(Blueprint $table){</p>
+
+<p>$table-&gt;id();</p>
+
+<p>$table-&gt;string(&lsquo;category_name&rsquo;);</p>
+
+<p>});</p>
+
+<p><strong>Миграция applications</strong></p>
+
+<p>Schema::create(&lsquo;applications&rsquo;, function(Blueprint $table){</p>
+
+<p>$table-&gt;id();</p>
+
+<p>$table-&gt;string(&lsquo;description&rsquo;);</p>
+
+<p>$table-&gt;foreignId(&lsquo;category_id)-&gt;constrained()-&gt;onDelete(&lsquo;cascade&rsquo;);</p>
+
+<p>$table-&gt;foreignId(&lsquo;user_id)-&gt;constrained()-&gt;onDelete(&lsquo;cascade&rsquo;);</p>
+
+<p>$table-&gt;foreignId(&lsquo;status_id)-&gt;constrained()-&gt;onDelete(&lsquo;cascade&rsquo;)-&gt;default(1);</p>
+
+<p>$table-&gt;timestamps();</p>
+
+<p>$table-&gt;index(&lsquo;created_at&rsquo;);</p>
+
+<p>});</p>
+
+<p><strong>Заполнить через интерфейс </strong><strong>phpMyAdmin (вкладка &laquo;Вставить&raquo;) таблицы &laquo;</strong><strong>statuses&raquo;, &laquo;</strong><strong>departments&raquo;</strong></p>
+
+<p><strong>В консоль </strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php</span></span> <span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">artisan</span></span> <span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">migrate</span></span></p>
+
+<p><strong>В консоль:</strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:model Status</span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО</span></span></p>
+
+<p><strong>МОДЕЛИ:</strong></p>
+
+<p><strong>Модель User</strong></p>
+
+<p>&nbsp;</p>
+
+<p>protected $fillable = [</p>
+
+<p>&lsquo;name&rsquo;,</p>
+
+<p>&rsquo;email&rsquo;,</p>
+
+<p>&rsquo;password&rsquo;,</p>
+
+<p>&rsquo;department_id&rsquo;,</p>
+
+<p>&rsquo;phone&rsquo;,</p>
+
+<p>&rsquo;last_name&rsquo;,</p>
+
+<p>&rsquo;first_name&rsquo;,</p>
+
+<p>&rsquo;patronym&rsquo;</p>
+
+<p>];</p>
+
+<p>public function departments(){</p>
+
+<p>return $this-&gt;hasMany(Dertment::class);</p>
+
+<p>}</p>
+
+<p>public function applications(){</p>
+
+<p>return $this-&gt;hasMany(Application::class);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Модель Status</strong></p>
+
+<p>&nbsp;</p>
+
+<p>protected $fillable = [&lsquo;status_name&rsquo;];</p>
+
+<p>public function applications(){</p>
+
+<p>return $this-&gt;hasMany(Application::class);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Модель Department</strong></p>
+
+<p>&nbsp;</p>
+
+<p>protected $fillable = [&lsquo;department _name&rsquo;];</p>
+
+<p>public function user(){</p>
+
+<p>return $this-&gt;belongsTo(User::class);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Модель Category</strong></p>
+
+<p>protected $fillable = [&lsquo;category_name&rsquo;];</p>
+
+<p>public function applications(){</p>
+
+<p>return $this-&gt;hasMany(Application::class);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Модель Application</strong></p>
+
+<p>protected $fillable = [&lsquo;description&rsquo;, &rsquo;category_id&rsquo;, &rsquo;status_id&rsquo;];</p>
+
+<p>public function user(){</p>
+
+<p>return $this-&gt;belongsTo(User::class);</p>
+
+<p>}</p>
+
+<p>public function category(){</p>
+
+<p>return $this-&gt;belongsTo(Category::class);</p>
+
+<p>}</p>
+
+<p>public function status(){</p>
+
+<p>return $this-&gt;belongsTo(Status::class);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p>СОЗДАЕШЬ БАЗОВЫЙ ШАБЛОН <strong>base.blade.php</strong> В ПАПКЕ <strong>resources/views/layouts</strong></p>
+
+<p>&nbsp;</p>
+
+<p><strong>в title :</strong></p>
+
+<p><strong>&lt;title&gt;@yield(&lsquo;title&rsquo;)&lt;/title&gt;</strong></p>
+
+<p><strong>B body</strong></p>
+
+<p><strong>&lt;div class=&rdquo;container&rdquo;&gt;</strong></p>
+
+<p><strong>&lt;h1&gt;Сервис</strong><strong> Help&lt;/h1&gt;</strong></p>
+
+<p><strong>@auth</strong></p>
+
+<p><strong>&lt;nav&gt;</strong></p>
+
+<p><strong>&lt;ul&gt; </strong></p>
+
+<p><strong>&lt;li&gt;&lt;a href=&rdquo;{{ route(&lsquo;application.index&rsquo;) }}&rdquo;&gt;Мои</strong><strong> заявки</strong><strong>&lt;a/&gt;&lt;/li&gt;</strong></p>
+
+<p><strong>&lt;li&gt;&lt;a href=&rdquo;{{ route(&lsquo;auth.logout&rsquo;) }}&rdquo;&gt;Выход</strong><strong>&lt;a/&gt;&lt;/li&gt;</strong></p>
+
+<p><strong>&lt;/ul&gt;</strong></p>
+
+<p><strong>&lt;/nav&gt;</strong></p>
+
+<p><strong>@endauth</strong></p>
+
+<p><strong>@yield(&lsquo;main&rsquo;)</strong></p>
+
+<p><strong>&lt;/div&gt;</strong></p>
+
+<p><strong>В консоль</strong><strong>:</strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:controller RegisterController</span></span></p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">B</span></span></strong><strong> </strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">web</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">.</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif"> (</span></span></strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО<strong>)</strong></span></span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&rsquo;/register&rsquo;, [RegisterController::class, &lsquo;registerform&rsquo;])-&gt;name(&lsquo;auth.register&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">Route::post(&rsquo;/register&rsquo;, [RegisterController::class, &lsquo;register&rsquo;])-&gt;name(&lsquo;auth.register&rsquo;);</span></p>
+
+<p>&nbsp;</p>
+
+<p>СОЗДАЕШЬ ШАБЛОН <strong>register.blade.php</strong> В ПАПКЕ r<strong>esources/views/auth</strong></p>
+
+<p>&nbsp;</p>
+
+<p>@extends(&lsquo;layouts.base&rsquo;)</p>
+
+<p>@section(&lsquo;title&rsquo;, &rsquo;Регистрация&rsquo;)</p>
+
+<p>@section(&lsquo;main&rsquo;)</p>
+
+<p>&lt;form method=&rdquo;post&rdquo; action=&rsquo;{{ route(&ldquo;auth.register&rdquo;) }}&rsquo;</p>
+
+<p>@csrf</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label&gt;Ваши ФИО&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;last_name&rdquo; name=&rdquo;last_name&rdquo; type=&rdquo;text&rdquo; placeholder=&rdquo;Фамилия&rdquo;&gt;</p>
+
+<p>&lt;input id=&rdquo;first_name&rdquo; name=&rdquo;first_name&rdquo; type=&rdquo;text&rdquo; placeholder=&rdquo;Имя&rdquo;&gt;</p>
+
+<p>&lt;input id=&rdquo;patronym&rdquo; name=&rdquo;patronym&rdquo; type=&rdquo;text&rdquo; placeholder=&rdquo;Отчество&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;name&rdquo;&gt;Ваш логин &lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;name&rdquo; name=&rdquo;name&rdquo; type=&rdquo;text&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;email&rdquo;&gt;Ваша почта&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;email&rdquo; name=&rdquo;email&rdquo; type=&rdquo;email&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;phone&rdquo;&gt;Ваш номер&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;phone&rdquo; name=&rdquo;phone&rdquo; type=&rdquo;text&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;departmentText&rdquo;&gt;Отдел в котором вы работаете&lt;/label&gt;</p>
+
+<p>&lt;select name=&rdquo;department_id&rdquo; id=&rdquo;departmentText&rdquo;&gt;</p>
+
+<p>@foreach ($departments as $department)</p>
+
+<p>&lt;option value=&rdquo;{{ $department-&gt;id }}&rdquo;&gt;{{ $department-&gt;department_name }}&lt;/option&gt;</p>
+
+<p>@endforeach</p>
+
+<p>&lt;/select&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;password&rdquo;&gt;Ваш пароль&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;password&rdquo; name=&rdquo;password&rdquo; type=&rdquo;password&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;password_confirmation&rdquo;&gt;Ваш пароль&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;password_confirmation&rdquo; name=&rdquo;password_confirmation&rdquo; type=&rdquo;password&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;button type=&rdquo;submit&rdquo;&gt;Регистрация&lt;/button&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&lt;/form&gt;</p>
+
+<p>&lt;p&gt;Есть учетная запись? &lt;a href=&rdquo;{{ route(&lsquo;auth.login&rsquo;) }}&rdquo;&gt;Авторизуйтесь&lt;/a&gt;&lt;/p&gt;</p>
+
+<p>@endsection(&lsquo;main&rsquo;)</p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt">B</span></strong><strong> </strong><strong><span style="font-size:14.0pt">RegisterController</span></strong><span style="font-size:14.0pt"> (</span><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО</span></span><span style="font-size:14.0pt">)</span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt">public function registerform(){</span></p>
+
+<p><span style="font-size:14.0pt">$departments = [&lsquo;departments&rsquo; =&gt; Department::all()];</span></p>
+
+<p><span style="font-size:14.0pt">return view(&lsquo;auth.register&rsquo;, $departments);</span></p>
+
+<p><span style="font-size:14.0pt">}</span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt">public function register(Request $request){</span></p>
+
+<p><span style="font-size:14.0pt">$user = User::create([</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;name&rsquo;=&gt; $request-&gt;name,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;last_name&rsquo; =&gt; $request-&gt;last_name,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;first_name&rsquo; =&gt; $request-&gt;first_name,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;patronym&rsquo; =&gt; $request-&gt; patronym,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;phone&rsquo; =&gt; $request-&gt;phone,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;email&rsquo; =&gt; $request-&gt;email,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;department_id&rsquo; =&gt; $request-&gt;department_id,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;password&rsquo; =&gt; Hash::make($request-&gt; password)</span></p>
+
+<p><span style="font-size:14.0pt">]);</span></p>
+
+<p><span style="font-size:14.0pt">event(new Registered($user));</span></p>
+
+<p><span style="font-size:14.0pt">Auth::login($user);</span></p>
+
+<p><span style="font-size:14.0pt">Return redirect()-&gt;route(&lsquo;application.index&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">}</span></p>
+
+<p>&nbsp;</p>
+
+<p><strong>В консоль</strong><strong>:</strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:controller LoginController</span></span></p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">B</span></span></strong><strong> </strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">web</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">.</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif"> (</span></span></strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО<strong>)</strong></span></span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&rsquo;/login&rsquo;, [LoginController::class, &lsquo;loginform&rsquo;])-&gt;name(&lsquo;auth.login&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">Route::post(&rsquo;/login&rsquo;, [LoginController::class, &lsquo;login&rsquo;])-&gt;name(&lsquo;auth.login&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&rsquo;/logout&rsquo;, [LoginController::class, &lsquo;logout&rsquo;])-&gt;name(&lsquo;auth.logout&rsquo;);</span></p>
+
+<p>&nbsp;</p>
+
+<p>СОЗДАЕШЬ ШАБЛОН <strong>login.blade.php</strong> В ПАПКЕ resources/views/auth</p>
+
+<p>@extends(&lsquo;layouts.base&rsquo;)</p>
+
+<p>@section(&lsquo;title&rsquo;, &rsquo;Авторизация&rsquo;)</p>
+
+<p>@section(&lsquo;main&rsquo;)</p>
+
+<p>&lt;form method=&rdquo;post&rdquo; action=&rsquo;{{ route(&ldquo;auth.login&rdquo;) }}&rsquo;</p>
+
+<p>@csrf</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;email&rdquo;&gt;Ваша почта&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;email&rdquo; name=&rdquo;email&rdquo; type=&rdquo;email&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;password&rdquo;&gt;Ваш пароль&lt;/label&gt;</p>
+
+<p>&lt;input id=&rdquo;password&rdquo; name=&rdquo;password&rdquo; type=&rdquo;password&rdquo;&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;button type=&rdquo;submit&rdquo;&gt;Войти&lt;/button&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&lt;/form&gt;</p>
+
+<p>&lt;p&gt;Нет учетной записи? &lt;a href=&rdquo;{{ route(&lsquo;auth.register&rsquo;) }}&rdquo;&gt;Зарегистрируйтесь&lt;/a&gt;&lt;/p&gt;</p>
+
+<p>@endsection(&lsquo;main&rsquo;)</p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt">B</span></strong><strong> </strong><strong><span style="font-size:14.0pt">LoginController</span></strong><span style="font-size:14.0pt"> (</span><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО</span></span><span style="font-size:14.0pt">)</span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt">public function loginform(){</span></p>
+
+<p><span style="font-size:14.0pt">return view(&lsquo;auth.login&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">}</span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt">public function login(Request $request){</span></p>
+
+<p><span style="font-size:14.0pt">$success = auth()-&gt;attempt([</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;email&rsquo; =&gt; $request-&gt;email,</span></p>
+
+<p><span style="font-size:14.0pt">&lsquo;password&rsquo; =&gt; $request-&gt;password</span></p>
+
+<p><span style="font-size:14.0pt">], request()-&gt;has(&lsquo;remember&rsquo;));</span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt">If($success) {</span></p>
+
+<p><span style="font-size:14.0pt">return redirect()-&gt;route(&lsquo;application.index&rsquo;); }</span></p>
+
+<p><span style="font-size:14.0pt">}</span></p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-size:14.0pt">public function logout(){</span></p>
+
+<p><span style="font-size:14.0pt">auth()-&gt;logout();</span></p>
+
+<p><span style="font-size:14.0pt">return redirect()-&gt;route(&lsquo;auth.login&rsquo;); </span></p>
+
+<p><span style="font-size:14.0pt">}</span></p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">B</span></span></strong><strong> </strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">web</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">.</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif"> (</span></span></strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО<strong>)</strong></span></span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&rsquo;/application&rsquo;, [ApplicationController::class, &lsquo;index&rsquo;])-&gt;name(&lsquo;application.index&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&rsquo;/application/create&rsquo;, [ApplicationController::class, &lsquo;create&rsquo;])-&gt;name(&lsquo;application.create&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">Route::post(&rsquo;/application/create&rsquo;, [ApplicationController::class, &lsquo;store&rsquo;])-&gt;name(&lsquo;application.store&rsquo;);</span></p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt">B</span></strong><strong> </strong><strong><span style="font-size:14.0pt">ApplicationController</span></strong><strong> </strong><span style="font-size:14.0pt">(</span><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО</span></span><span style="font-size:14.0pt">)</span></p>
+
+<p>&nbsp;</p>
+
+<p>public function index(){</p>
+
+<p>$context = [&lsquo;applications&rsquo; =&gt; Auth::user()-&gt;applications()-&gt;latest()-&gt;get() ];</p>
+
+<p>return view(&lsquo;application.index&rsquo;, $context);</p>
+
+<p>}</p>
+
+<p>public function create(){</p>
+
+<p>$categories= [&lsquo;categories&rsquo; =&gt; Category::all() ];</p>
+
+<p>return view(&lsquo;application.create_application&rsquo;, $categories);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p>public function store(Request $request){</p>
+
+<p>Auth::user()-&gt;applications()-&gt;create([</p>
+
+<p>&lsquo;description&rsquo; =&gt; request(&lsquo;description&rsquo;),</p>
+
+<p>&lsquo;category_id&rsquo; =&gt; $request-&gt;category,</p>
+
+<p>&lsquo;status_id&rsquo; =&gt; 1</p>
+
+<p>]);</p>
+
+<p>return redirect()-&gt;route(&lsquo;application.index&rsquo;);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p>СОЗДАЕШЬ ШАБЛОН <strong>index.blade.php</strong> В ПАПКЕ resources/views/application</p>
+
+<p>&nbsp;</p>
+
+<p>@extends(&lsquo;layouts.base&rsquo;)</p>
+
+<p>@section(&lsquo;title&rsquo;, &rsquo;Все заявки&rsquo;)</p>
+
+<p>@section(&lsquo;main&rsquo;)</p>
+
+<p>&lt;h2&gt;Мои заявки&lt;/h2&gt;</p>
+
+<p>&lt;a href=&rdquo;{{ route(&lsquo;application.create&rsquo;) }}&rdquo;Создать заявку&lt;/a&gt;</p>
+
+<p>@if (count($applications)&gt;0)</p>
+
+<p>&lt;article&gt;</p>
+
+<p>@foreach ($applications as $application)</p>
+
+<p>&lt;p&gt;{{&nbsp; $application-&gt;description }}&lt;/p&gt;</p>
+
+<p>&lt;p&gt;{{&nbsp; $application-&gt;created_at }}&lt;/p&gt;</p>
+
+<p>@endforeach</p>
+
+<p>&lt;/article&gt;</p>
+
+<p>@else</p>
+
+<p>&lt;p&gt;У вас нет заявок&lt;/p&gt;</p>
+
+<p>@endif</p>
+
+<p>@endsection(&lsquo;main&rsquo;)</p>
+
+<p>&nbsp;</p>
+
+<p>СОЗДАЕШЬ ШАБЛОН <strong>create_application.blade.php</strong> В ПАПКЕ <strong>resources/views/application</strong></p>
+
+<p>&nbsp;</p>
+
+<p>@extends(&lsquo;layouts.base&rsquo;)</p>
+
+<p>@section(&lsquo;title&rsquo;, &rsquo;Все заявки&rsquo;)</p>
+
+<p>@section(&lsquo;main&rsquo;)</p>
+
+<p>&lt;h2&gt;Добавление заявки&lt;/h2&gt;</p>
+
+<p>&lt;a href=&rdquo;{{ route(&lsquo;application.create&rsquo;) }}&rdquo;Создать заявку&lt;/a&gt;</p>
+
+<p>&lt;form method=&rdquo;post&rdquo; action=&rsquo;{{ route(&ldquo;application.store&rdquo;) }}&rsquo;</p>
+
+<p>@csrf</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;descriptionText&rdquo;&gt;Описание проблемы&lt;/label&gt;</p>
+
+<p>&lt;textarea name=&rdquo; descriptionText&rdquo; id=&rdquo; descriptionText&rdquo; rows=&rdquo;5&rdquo;&gt;&lt;textarea&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;label for=&rdquo;categoryText&rdquo;&gt;Категория проблемы&lt;/label&gt;</p>
+
+<p>&lt;select name=&rdquo;category&rdquo; id=&rdquo;categoryText&rdquo;&gt;</p>
+
+<p>@foreach ($categories as $category)</p>
+
+<p>&lt;option value=&rdquo;{{ $category-&gt;id }}&rdquo;&gt;{{ $category-&gt; category_name }}&lt;/option&gt;</p>
+
+<p>@endforeach</p>
+
+<p>&lt;/select&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;line&rdquo;&gt;</p>
+
+<p>&lt;button type=&rdquo;submit&rdquo;&gt;Отправить&lt;/button&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&lt;/form&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>@endsection(&lsquo;main&rsquo;)</p>
+
+<p>&nbsp;</p>
+
+<p><strong>В консоль</strong><strong>:</strong></p>
+
+<p><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php artisan make:controller AdminController</span></span></p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">B</span></span></strong><strong> </strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">web</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">.</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">php</span></span></strong><strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif"> (</span></span></strong><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО<strong>)</strong></span></span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&rsquo;/admin&rsquo;, [AdminController::class, &lsquo;index&rsquo;])-&gt;name(&lsquo;admin.index&rsquo;);</span></p>
+
+<p><span style="font-size:14.0pt">Route::patch(&rsquo;/logout&rsquo;, [AdminController::class, &lsquo;update&rsquo;])-&gt;name(&lsquo;status.update&rsquo;);</span></p>
+
+<p>&nbsp;</p>
+
+<p><strong><span style="font-size:14.0pt">B</span></strong><strong> </strong><strong><span style="font-size:14.0pt">AdminController</span></strong><strong> </strong><span style="font-size:14.0pt">(</span><span style="font-size:14.0pt"><span style="font-family:&quot;Times New Roman&quot;,serif">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО</span></span><span style="font-size:14.0pt">)</span></p>
+
+<p>&nbsp;</p>
+
+<p>public function index(){</p>
+
+<p>$context = [</p>
+
+<p>&lsquo;applications&rsquo; =&gt; Application::latest()-&gt;get(),</p>
+
+<p>&lsquo;statuses&rsquo; =&gt; Status::all()</p>
+
+<p>&nbsp;];</p>
+
+<p>return view(&lsquo;admin.index&rsquo;, $context);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p>public function update(Request $request, Application $application)</p>
+
+<p>{</p>
+
+<p>$application = Application::where(&lsquo;id&rsquo;, $request-&gt;application_id)-&gt;update([</p>
+
+<p>&lsquo;status_id&rsquo; =&gt; $request-&gt;status</p>
+
+<p>]);</p>
+
+<p>return redirect()-&gt;route(&lsquo;admin.index&rsquo;);</p>
+
+<p>}</p>
+
+<p>&nbsp;</p>
+
+<p>СОЗДАЕШЬ ШАБЛОН <strong>index.blade.php</strong> В ПАПКЕ <strong>resources/views/admin</strong></p>
+
+<p>&nbsp;</p>
+
+<p>@extends(&lsquo;layouts.base&rsquo;)</p>
+
+<p>@section(&lsquo;title&rsquo;, &rsquo;Панель администратора&rsquo;)</p>
+
+<p>@section(&lsquo;main&rsquo;)</p>
+
+<p>&lt;h2&gt;все заявки&lt;/h2&gt;</p>
+
+<p>&lt;div class=&rdquo;applications&rdquo;&gt;</p>
+
+<p>@if (count($applications)&gt;0)</p>
+
+<p>&lt;article&gt;</p>
+
+<p>@foreach ($applications as $application)</p>
+
+<p>&lt;h3&gt;Заявка № {{ $application-&gt;id }}&lt;/h3&gt;</p>
+
+<p>&lt;p&gt;{{ $application-&gt;user-&gt;first_name }}{{ $application-&gt;user-&gt;last_name }}{{ $application-&gt;user-&gt;patronym }}&lt;/p&gt;</p>
+
+<p>&lt;p&gt;{{ $application-&gt;user-&gt;department_id }}&lt;/p&gt;</p>
+
+<p>&lt;p&gt;{{ $application-&gt;category-&gt;category_name }}&lt;/p&gt;</p>
+
+<p>&lt;p&gt;{{ $application-&gt;description }}&lt;/p&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&lt;div class=&rdquo;status-{{ $application-&gt;status-&gt;id }}&rdquo;&gt;{{ $application-&gt;status-&gt;status_name }}&lt;/div&gt;</p>
+
+<p>&lt;form action=&rdquo;{{ route(&lsquo;status.update&rsquo;) }}&rdquo; method=&rdquo;post&rdquo;&gt;</p>
+
+<p>@csrf</p>
+
+<p>@method(&lsquo;PATCH&rsquo;)</p>
+
+<p>&lt;input type=&rdquo;hidden&rdquo; name=&rdquo;application_id&rdquo; value=&rdquo;{{ $application-&gt;id }}&rdquo;&gt;</p>
+
+<p>&lt;select name=&rdquo;status&rdquo; id=&rdquo;statusText&rdquo;&gt;</p>
+
+<p>@foreach ($statuses as $status)</p>
+
+<p>&lt;option value=&rdquo;{{ $status-&gt;id }}&rdquo;&gt;{{ $status-&gt;status_name }}&lt;/option&gt;</p>
+
+<p>@endforeach</p>
+
+<p>&lt;/select&gt;</p>
+
+<p>&lt;button type=&rdquo;submit&rdquo;&gt;Обновить&lt;/button&gt;</p>
+
+<p>&lt;/form&gt;</p>
+
+<p>&lt;span&gt;{{ $application-&gt;created_at }}&lt;/span&gt;</p>
+
+<p>&lt;p&gt;&lt;a href=&rdquo;{{ route(&lsquo;status.update&rsquo;) }}&rdquo;&gt;Изменить статус&lt;/a&gt;&lt;/p&gt;</p>
+
+<p>@endforeach</p>
+
+<p>&lt;/article&gt;</p>
+
+<p>@else</p>
+
+<p>&lt;p&gt;В настоящее время заявок нет&lt;/p&gt;</p>
+
+<p>@endif</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>@endsection(&lsquo;main&rsquo;)</p>
+</body>
+</html>
