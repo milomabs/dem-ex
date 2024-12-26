@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>be1.ru</title>
+</head>
+<body>
+<p><span style="font-size:14.0pt">В консоль&nbsp;<br />
+ssh твой ник@127.0.0.1<br />
+логин и пароль&nbsp;<br />
+cd ник-m1<br />
+unzip laravel_11.zip<br />
+настройки с БД в файле env (уже в папке)<br />
+DB_CONNECTION=127.0.0.1<br />
+DB_PORT=3306<br />
+DB_DATABASE= ник_m1<br />
+DB_USERNAME = ник<br />
+DB_PASSWORD = пароль<br />
+(проект должен запускаться)<br />
+В консоль&nbsp;<br />
+php artisan make:model Application -mcr<br />
+php artisan make:model Department -mcr<br />
+php artisan make:model Category -mcr</span></p>
+
+<p><span style="font-size:14.0pt">Изменить порядок выполнения миграций<br />
+&nbsp;<input alt="ф" src="https://github.com/milomabs/dem-ex/blob/main/%D0%A0%D0%B8%D1%81%D1%83%D0%BD%D0%BE%D0%BA1.png?raw=true" style="width: 276px; height: 136px;" type="image" /><br />
+Create_application &ndash; должна быть в самом конце</span></p>
+
+<p><span style="font-size:14.0pt">Миграция departments<br />
+Schema::create(&#39;departments&#39;, function (Blueprint $table) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;id();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;department_name&#39;);</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp; &nbsp; &nbsp; &nbsp; });<br />
+Миграция users<br />
+Schema::create(&#39;users&#39;, function(Blueprint $table){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;id();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;name&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;last_name&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;first_name&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;patronym&#39;)-&gt;nullable();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;phone&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;foreignId(&#39;department_id&#39;)-&gt;constrained();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;email&#39;)-&gt;unique();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;timestamp(&#39;email_verified_at&#39;)-&gt; nullable();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;password&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;rememberToken();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;timestamps();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });<br />
+Миграция statuses<br />
+Schema::create(&#39;statuses&#39;, function(Blueprint $table){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;id();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;status_name&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; });<br />
+Миграция categories<br />
+Schema::create(&#39;categories&#39;, function (Blueprint $table) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;id();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;category_name&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; });<br />
+Миграция applications<br />
+Schema::create(&#39;applications&#39;, function(Blueprint $table){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;id();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;string(&#39;description&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;foreignId(&#39;category_id&#39;)-&gt;constrained()-&gt;onDelete(&#39;cascade&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;foreignId(&#39;user_id&#39;)-&gt;constrained()-&gt;onDelete(&#39;cascade&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;foreignId(&#39;status_id&#39;)-&gt;constrained()-&gt;onDelete(&#39;cascade&#39;)-&gt;default(1);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;timestamps();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $table-&gt;index(&#39;created_at&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });<br />
+В консоль&nbsp;<br />
+php artisan migrate<br />
+Заполнить через интерфейс phpMyAdmin таблицы &laquo;statuses&raquo;, &laquo;departments&raquo;<br />
+В консоль:<br />
+php artisan make:model Status</span></p>
+
+<p><span style="font-size:14.0pt">ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО<br />
+МОДЕЛИ:<br />
+Модель User</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp; protected $fillable = [<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;name&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;email&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;password&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;department_id&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;phone&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;last_name&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;first_name&#39;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;patronym&#39;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ];<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function departments(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return $this-&gt;hasMany(Dertment::class);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function applications(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return $this-&gt;hasMany(Application::class);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }</span></p>
+
+<p><span style="font-size:14.0pt">Модель Status</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp; &nbsp; protected $fillable = [&#39;status_name&#39;];<br />
+&nbsp; &nbsp; public function applications(){<br />
+&nbsp; &nbsp; return $this-&gt;hasMany(Application::class);<br />
+Модель Department</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp; &nbsp; protected $fillable = [&#39;department _name&#39;];<br />
+&nbsp; &nbsp; public function user(){<br />
+&nbsp; &nbsp; return $this-&gt;belongsTo(User::class);<br />
+Модель Category</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp; &nbsp; protected $fillable = [&#39;category_name&#39;];<br />
+&nbsp; &nbsp; public function applications(){<br />
+&nbsp; &nbsp; return $this-&gt;hasMany(Application::class);<br />
+}</span></p>
+
+<p><span style="font-size:14.0pt">Модель Application<br />
+&nbsp; &nbsp; protected $fillable = [&#39;description&#39;, &#39;category_id&#39;, &#39;status_id&#39;];<br />
+&nbsp; &nbsp; public function user(){<br />
+&nbsp; &nbsp; return $this-&gt;belongsTo(User::class);<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; public function category(){<br />
+&nbsp; &nbsp; return $this-&gt;belongsTo(Category::class);<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; public function status(){<br />
+&nbsp; &nbsp; return $this-&gt;belongsTo(Status::class);<br />
+&nbsp; &nbsp; }<br />
+СОЗДАЕШЬ БАЗОВЫЙ ШАБЛОН base.blade.php В ПАПКЕ resources/views/layouts</span></p>
+
+<p><span style="font-size:14.0pt">в title :<br />
+&lt;title&gt;@yield(&#39;title&#39;)&lt;/title&gt;<br />
+В body :<br />
+&lt;div class=&quot;container&quot;&gt;<br />
+&lt;h1&gt;Сервис Help&lt;/h1&gt;<br />
+@auth<br />
+&lt;nav&gt;<br />
+&lt;ul&gt;&nbsp;<br />
+&lt;li&gt;&lt;a href=&quot;{{ route(&#39;application.index&#39;) }}&quot;&gt;Мои заявки&lt;/a&gt;&lt;/li&gt;<br />
+&lt;li&gt;&lt;a href=&quot;{{ route(&#39;auth.logout&#39;) }}&quot;&gt;Выход&lt;/a&gt;&lt;/li&gt;&nbsp;<br />
+&lt;/ul&gt;<br />
+&lt;/nav&gt;<br />
+@endauth<br />
+@yield(&#39;main&#39;)<br />
+&lt;/div&gt;<br />
+В консоль:<br />
+php artisan make:controller RegisterController</span></p>
+
+<p><span style="font-size:14.0pt">B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)<br />
+Route::get(&#39;/register&#39;, [RegisterController::class, &#39;registerform&#39;])-&gt;name(&#39;auth.register&#39;);<br />
+Route::post(&#39;/register&#39;, [RegisterController::class, &#39;register&#39;])-&gt;name(&#39;auth.register&#39;);</span></p>
+
+<p><span style="font-size:14.0pt">СОЗДАЕШЬ ШАБЛОН register.blade.php В ПАПКЕ resources/views/auth<br />
+тайтл<br />
+&nbsp;@extends(&#39;layouts.base&#39;)<br />
+@section(&#39;title&#39;, &#39;Регистрация&#39;)<br />
+@section(&#39;main&#39;)<br />
+&lt;form method=&quot;post&quot; action=&#39;{{ route(&quot;auth.register&quot;) }}&#39;&gt;<br />
+@csrf<br />
+&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label&gt;Ваши ФИО&lt;/label&gt;<br />
+&lt;input id=&quot;last_name&quot; name=&quot;last_name&quot; type=&quot;text&quot; placeholder=&quot;Фамилия&quot;&gt;<br />
+&lt;input id=&quot;first_name&quot; name=&quot;first_name&quot; type=&quot;text&quot; placeholder=&quot;Имя&quot;&gt;<br />
+&lt;input id=&quot;patronym&quot; name=&quot;patronym&quot; type=&quot;text&quot; placeholder=&quot;Отчество&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;name&quot;&gt;Ваш логин &lt;/label&gt;<br />
+&lt;input id=&quot;name&quot; name=&quot;name&quot; type=&quot;text&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;email&quot;&gt;Ваша почта&lt;/label&gt;<br />
+&lt;input id=&quot;email&quot; name=&quot;email&quot; type=&quot;email&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;phone&quot;&gt;Ваш номер&lt;/label&gt;<br />
+&lt;input id=&quot;phone&quot; name=&quot;phone&quot; type=&quot;text&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;departmentText&quot;&gt;Отдел в котором вы работаете&lt;/label&gt;<br />
+&lt;select name=&quot;department_id&quot; id=&quot;departmentText&quot;&gt;<br />
+@foreach ($departments as $department)<br />
+&lt;option value=&quot;{{ $department-&gt;id }}&quot;&gt;{{ $department-&gt;department_name }}&lt;/option&gt;<br />
+@endforeach<br />
+&lt;/select&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;password&quot;&gt;Ваш пароль&lt;/label&gt;<br />
+&lt;input id=&quot;password&quot; name=&quot;password&quot; type=&quot;password&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;password_confirmation&quot;&gt;Ваш пароль&lt;/label&gt;<br />
+&lt;input id=&quot;password_confirmation&quot; name=&quot;password_confirmation&quot; type=&quot;password&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;button type=&quot;submit&quot;&gt;Регистрация&lt;/button&gt;<br />
+&lt;/div&gt;<br />
+&lt;/form&gt;<br />
+&lt;p&gt;Есть учетная запись? &lt;a href=&quot;{{ route(&#39;auth.login&#39;) }}&quot;&gt;Авторизуйтесь&lt;/a&gt;&lt;/p&gt;<br />
+@endsection(&#39;main&#39;)</span></p>
+
+<p><span style="font-size:14.0pt">B RegisterController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp;&nbsp;&nbsp; &nbsp;public function registerform(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $departments = [&#39;departments&#39; =&gt; Department::all()];<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return view(&#39;auth.register&#39;, $departments);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function register(Request $request){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $user = User::create([<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;name&#39;=&gt; $request-&gt;name,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;last_name&#39; =&gt; $request-&gt;last_name,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;first_name&#39; =&gt; $request-&gt;first_name,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;patronym&#39; =&gt; $request-&gt; patronym,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;phone&#39; =&gt; $request-&gt;phone,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;email&#39; =&gt; $request-&gt;email,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;department_id&#39; =&gt; $request-&gt;department_id,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;password&#39; =&gt; Hash::make($request-&gt; password)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ]);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; event(new Registered($user));<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Auth::login($user);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Return redirect()-&gt;route(&#39;application.index&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }</span></p>
+
+<p><span style="font-size:14.0pt">В консоль:<br />
+php artisan make:controller LoginController</span></p>
+
+<p><span style="font-size:14.0pt">B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)<br />
+Route::get(&#39;/login&#39;, [LoginController::class, &#39;loginform&#39;])-&gt;name(&#39;auth.login&#39;);<br />
+Route::post(&#39;/login&#39;, [LoginController::class, &#39;login&#39;])-&gt;name(&#39;auth.login&#39;);<br />
+Route::get(&#39;/logout&#39;, [LoginController::class, &#39;logout&#39;])-&gt;name(&#39;auth.logout&#39;);</span></p>
+
+<p><span style="font-size:14.0pt">СОЗДАЕШЬ ШАБЛОН login.blade.php В ПАПКЕ resources/views/auth<br />
+@extends(&#39;layouts.base&#39;)<br />
+@section(&#39;title&#39;, &#39;Авторизация&#39;)<br />
+@section(&#39;main&#39;)<br />
+&lt;form method=&quot;post&quot; action=&#39;{{ route(&quot;auth.login&quot;) }}&#39;&gt;<br />
+@csrf</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;email&quot;&gt;Ваша почта&lt;/label&gt;<br />
+&lt;input id=&quot;email&quot; name=&quot;email&quot; type=&quot;email&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;password&quot;&gt;Ваш пароль&lt;/label&gt;<br />
+&lt;input id=&quot;password&quot; name=&quot;password&quot; type=&quot;password&quot;&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;button type=&quot;submit&quot;&gt;Войти&lt;/button&gt;<br />
+&lt;/div&gt;<br />
+&lt;/form&gt;<br />
+&lt;p&gt;Нет учетной записи? &lt;a href=&quot;{{ route(&#39;auth.register&#39;) }}&quot;&gt;Зарегистрируйтесь&lt;/a&gt;&lt;/p&gt;<br />
+@endsection(&#39;main&#39;)</span></p>
+
+<p><span style="font-size:14.0pt">B LoginController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp;&nbsp; &nbsp;public function loginform(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return view(&quot;auth.login&quot;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function login(Request $request){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $success = auth()-&gt;attempt([<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;email&quot; =&gt; $request-&gt;email,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;password&quot; =&gt; $request-&gt;password<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ], request()-&gt;has(&quot;remember&quot;));<br />
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; If($success) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return redirect()-&gt;route(&quot;application.index&quot;); }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function logout(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; auth()-&gt;logout();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return redirect()-&gt;route(&quot;auth.login&quot;);&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }</span></p>
+
+<p><span style="font-size:14.0pt">B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)</span></p>
+
+<p><span style="font-size:14.0pt">Route::get(&#39;/application&#39;, [ApplicationController::class, &#39;index&#39;])-&gt;name(&#39;application.index&#39;);<br />
+Route::get(&#39;/application/create&#39;, [ApplicationController::class, &#39;create&#39;])-&gt;name(&#39;application.create&#39;);<br />
+Route::post(&#39;/application/create&#39;, [ApplicationController::class, &#39;store&#39;])-&gt;name(&#39;application.store&#39;);</span></p>
+
+<p><span style="font-size:14.0pt">B ApplicationController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp;public function index(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $context = [&#39;applications&#39; =&gt; Auth::user()-&gt;applications()-&gt;latest()-&gt;get() ];<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return view(&#39;application.index&#39;, $context);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function create(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $categories= [&#39;categories&#39; =&gt; Category::all() ];<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return view(&#39;application.create_application&#39;, $categories);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function store(Request $request){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Auth::user()-&gt;applications()-&gt;create([<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;description&#39; =&gt; request(&#39;description&#39;),<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;category_id&#39; =&gt; $request-&gt;category,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;status_id&#39; =&gt; 1<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ]);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return redirect()-&gt;route(&#39;application.index&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }</span></p>
+
+<p><span style="font-size:14.0pt">СОЗДАЕШЬ ШАБЛОН index.blade.php В ПАПКЕ resources/views/application</span></p>
+
+<p><span style="font-size:14.0pt">@extends(&#39;layouts.base&#39;)<br />
+@section(&#39;title&#39;, &#39;Все заявки&#39;)<br />
+@section(&#39;main&#39;)<br />
+&lt;h2&gt;Мои заявки&lt;/h2&gt;<br />
+&lt;a href=&quot;{{ route(&#39;application.create&#39;) }}&quot;&gt;Создать заявку&lt;/a&gt;<br />
+@if (count($applications)&gt;0)<br />
+&lt;article&gt;<br />
+@foreach ($applications as $application)<br />
+&lt;p&gt;{{ &nbsp;$application-&gt;description }}&lt;/p&gt;<br />
+&lt;p&gt;{{ &nbsp;$application-&gt;created_at }}&lt;/p&gt;<br />
+@endforeach<br />
+&lt;/article&gt;<br />
+@else<br />
+&lt;p&gt;У вас нет заявок&lt;/p&gt;<br />
+@endif<br />
+@endsection(&#39;main&#39;)</span></p>
+
+<p><span style="font-size:14.0pt">СОЗДАЕШЬ ШАБЛОН create_application.blade.php В ПАПКЕ resources/views/application</span></p>
+
+<p><span style="font-size:14.0pt">@extends(&#39;layouts.base&#39;)<br />
+@section(&#39;title&#39;, &#39;Все заявки&#39;)<br />
+@section(&#39;main&#39;)<br />
+&lt;h2&gt;Добавление заявки&lt;/h2&gt;<br />
+&lt;a href=&quot;{{ route(&#39;application.create&#39;) }}&quot;&gt;Создать заявку&lt;/a&gt;<br />
+&lt;form method=&quot;post&quot; action=&#39;{{ route(&ldquo;application.store&quot;) }}&#39;&gt;<br />
+@csrf<br />
+&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;descriptionText&quot;&gt;Описание проблемы&lt;/label&gt;<br />
+&lt;textarea name=&quot; descriptionText&quot; id=&quot; descriptionText&quot; rows=&quot;5&quot;&gt;&lt;textarea&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;label for=&quot;categoryText&quot;&gt;Категория проблемы&lt;/label&gt;<br />
+&lt;select name=&quot;category&quot; id=&quot;categoryText&quot;&gt;<br />
+@foreach ($categories as $category)<br />
+&lt;option value=&quot;{{ $category-&gt;id }}&quot;&gt;{{ $category-&gt; category_name }}&lt;/option&gt;<br />
+@endforeach<br />
+&lt;/select&gt;<br />
+&lt;/div&gt;</span></p>
+
+<p><br />
+<span style="font-size:14.0pt">&lt;div class=&quot;line&quot;&gt;<br />
+&lt;button type=&quot;submit&quot;&gt;Отправить&lt;/button&gt;<br />
+&lt;/div&gt;<br />
+&lt;/form&gt;</span></p>
+
+<p><span style="font-size:14.0pt">@endsection(&#39;main&#39;</span></p>
+
+<p><span style="font-size:14.0pt">В консоль:<br />
+php artisan make:controller AdminController</span></p>
+
+<p><span style="font-size:14.0pt">B web.php (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)<br />
+Route::get(&#39;/admin&#39;, [AdminController::class, &#39;index&#39;])-&gt;name(&#39;admin.index&#39;);<br />
+Route::patch(&#39;/logout&#39;, [AdminController::class, &#39;update&#39;])-&gt;name(&#39;status.update&#39;);</span></p>
+
+<p><span style="font-size:14.0pt">B AdminController (ЕСЛИ ГДЕ ТО ПИШЕТСЯ КЛАСС ТО СВЕРХУ В ССЫЛКАХ ДОБАВЛЯЙ ССЫЛКУ НА НЕГО)</span></p>
+
+<p><span style="font-size:14.0pt">&nbsp;public function index(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $context = [<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;applications&#39; =&gt; Application::latest()-&gt;get(),<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;statuses&#39; =&gt; Status::all()<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;];<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return view(&#39;admin.index&#39;, $context);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; public function update(Request $request, Application $application)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; $application = Application::where(&#39;id&#39;, $request-&gt;application_id)-&gt;update([<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &#39;status_id&#39; =&gt; $request-&gt;status<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ]);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return redirect()-&gt;route(&#39;admin.index&#39;);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }</span></p>
+
+<p><span style="font-size:14.0pt">СОЗДАЕШЬ ШАБЛОН index.blade.php В ПАПКЕ resources/views/admin</span></p>
+
+<p><span style="font-size:14.0pt">@extends(&#39;layouts.base&#39;)<br />
+@section(&#39;title&#39;, &#39;Панель администратора&#39;)<br />
+@section(&#39;main&#39;)<br />
+&lt;h2&gt;все заявки&lt;/h2&gt;<br />
+&lt;div class=&quot;applications&quot;&gt;<br />
+@if (count($applications)&gt;0)<br />
+&lt;article&gt;<br />
+@foreach ($applications as $application)<br />
+&lt;h3&gt;Заявка № {{ $application-&gt;id }}&lt;/h3&gt;<br />
+&lt;p&gt;{{ $application-&gt;user-&gt;first_name }}{{ $application-&gt;user-&gt;last_name }}{{ $application-&gt;user-&gt;patronym }}&lt;/p&gt;<br />
+&lt;p&gt;{{ $application-&gt;user-&gt;department_id }}&lt;/p&gt;<br />
+&lt;p&gt;{{ $application-&gt;category-&gt;category_name }}&lt;/p&gt;<br />
+&lt;p&gt;{{ $application-&gt;description }}&lt;/p&gt;</span></p>
+
+<p><span style="font-size:14.0pt">&lt;div class=&quot;status-{{ $application-&gt;status-&gt;id }}&quot;&gt;{{ $application-&gt;status-&gt;status_name }}&lt;/div&gt;<br />
+&lt;form action=&quot;{{ route(&#39;status.update&#39;) }}&quot; method=&quot;post&quot;&gt;<br />
+@csrf<br />
+@method(&#39;PATCH&#39;)<br />
+&lt;input type=&quot;hidden&quot; name=&quot;application_id&quot; value=&quot;{{ $application-&gt;id }}&quot;&gt;<br />
+&lt;select name=&quot;status&quot; id=&quot;statusText&quot;&gt;<br />
+@foreach ($statuses as $status)<br />
+&lt;option value=&quot;{{ $status-&gt;id }}&quot;&gt;{{ $status-&gt;status_name }}&lt;/option&gt;<br />
+@endforeach<br />
+&lt;/select&gt;<br />
+&lt;button type=&quot;submit&quot;&gt;Обновить&lt;/button&gt;<br />
+&lt;/form&gt;<br />
+&lt;span&gt;{{ $application-&gt;created_at }}&lt;/span&gt;<br />
+&lt;p&gt;&lt;a href=&quot;{{ route(&#39;status.update&#39;) }}&quot;&gt;Изменить статус&lt;/a&gt;&lt;/p&gt;<br />
+@endforeach<br />
+&lt;/article&gt;<br />
+@else<br />
+&lt;p&gt;В настоящее время заявок нет&lt;/p&gt;<br />
+@endif<br />
+&lt;/div&gt;<br />
+@endsection(&#39;main&#39;)</span><br />
+&nbsp;</p>
+
+<form action="’{{" method="”post”">
+<div class="”line”">
+<p>&nbsp;</p>
+</div>
+</form>
+</body>
+</html>
